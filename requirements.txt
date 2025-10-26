@@ -1,0 +1,21 @@
+# Core numeric & data
+numpy>=1.24
+pandas>=1.5
+
+# Machine learning
+scikit-learn==1.7.0
+joblib>=1.2
+scipy>=1.10
+
+# Tree models / optional (used in experiments)
+xgboost>=1.7.6
+
+# Visualization
+matplotlib>=3.6
+seaborn>=0.12
+
+# Explainability / diagnostics (optional but recommended)
+shap>=0.42.1
+
+# Utilities
+tqdm>=4.64
