@@ -89,7 +89,6 @@ preproc = ColumnTransformer([
 y_binned = pd.qcut(y, q=5, labels=False, duplicates='drop')
 cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=RND)
 
-# ElasticNetCV (includes l1_ratio near 0.9)
 print("\nFitting ElasticNetCV (this may take a moment)...")
 enet_cv = ElasticNetCV(alphas=np.logspace(-5, 1, 60),
                        l1_ratio=[0.1, 0.3, 0.5, 0.7, 0.85, 0.9],
