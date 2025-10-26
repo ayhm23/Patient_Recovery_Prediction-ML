@@ -136,51 +136,51 @@ Focused on:
    git clone https://github.com/ayhm23/Patient_Recovery_Prediction-ML.git
    cd Patient_Recovery_Prediction-ML
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-Run the pipeline
+## 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-bash
-Copy code
+### Run the pipeline
+
+```bash
 python src/0_data_loading.py
 python src/1_eda.py
 python src/2_preprocessing.py
 python src/3_model_training.py
 python src/4_model_evaluation.py
-Saved outputs
+```
 
-Trained models → /models
+### Saved outputs
 
-Visualizations → /visualizations
+  * **Trained models** → `/models`
+  * **Visualizations** → `/visualizations`
+  * **Reports** → `/output`
 
-Reports → /output
+-----
 
-🧩 Reproducibility
-Random seed: random_state=42
+### 🧩 Reproducibility
 
-Cross-validation: StratifiedKFold (10 splits, binned on y)
+  * **Random seed:** `random_state=42`
+  * **Cross-validation:** `StratifiedKFold` (10 splits, binned on y)
+  * **Libraries:** pandas, numpy, scikit-learn, matplotlib, xgboost, joblib
 
-Libraries:
-pandas, numpy, scikit-learn, matplotlib, xgboost, joblib
+All preprocessing is handled in a `Scikit-learn Pipeline` to avoid data leakage.
 
-All preprocessing handled in Scikit-learn Pipeline to avoid data leakage.
+-----
 
-📈 Key Takeaways
-Linear models outperformed complex ensembles for this dataset.
+### 📈 Key Takeaways
 
-Feature engineering (ratios, logs) significantly boosted performance.
+  * Linear models outperformed complex ensembles for this dataset.
+  * Feature engineering (ratios, logs) significantly boosted performance.
+  * ElasticNet provided the optimal mix of interpretability, stability, and regularization.
+  * **Final Kaggle score:** 1.980, **RMSE ≈ 2.04** (OOF).
 
-ElasticNet provided the optimal mix of interpretability, stability, and regularization.
+-----
 
-Final Kaggle score 1.980, RMSE ≈ 2.04 (OOF).
+### 🧑‍💻 Contributors
 
-🧑‍💻 Contributors
-Archit Jaju (IMT2023128)
+  * Archit Jaju (IMT2023128)
+  * Sanyam Verma (IMT2023040)
 
-Sanyam Verma (IMT2023040)
-
-📜 License & AcknowledgementsAC
-License: Add license (e.g., MIT)
-
-Acknowledgements: Dataset providers, Kaggle platform, Scikit-learn, XGBoost
+**Acknowledgements:** Dataset providers, Kaggle platform, Scikit-learn, XGBoost
