@@ -6,6 +6,21 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 
+def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
+    
+    df = df.copy()
+    df['Therapy_x_Health'] = df['Therapy Hours'] * df['Initial Health Score']
+    df['Therapy_plus_Health'] = df['Therapy Hours'] + df['Initial Health Score']
+    df['Sleep_x_Health'] = df['Average Sleep Hours'] * df['Initial Health Score']
+    df['FollowUp_x_Health'] = df['Follow-Up Sessions'] * df['Initial Health Score']
+    df['Therapy_x_Sleep'] = df['Therapy Hours'] * df['Average Sleep Hours']
+    df['Sleep_plus_Health'] = df['Average Sleep Hours'] + df['Initial Health Score']
+    df['Therapy_Health_ratio'] = df['Therapy Hours'] / (df['Initial Health Score'] + 1)
+    df['Sleep_Health_ratio'] = df['Average Sleep Hours'] / (df['Initial Health Score'] + 1)
+    df['log_Therapy'] = np.log1p(df['Therapy Hours'])
+    df['log_Health'] = np.log1p(df['Initial Health Score'])
+    return df
+
 def safe_to_csv(df, path, timestamp=None):
     """Write df to path; on PermissionError append timestamp to filename."""
     try:
