@@ -1,136 +1,186 @@
-# Patient Recovery Prediction - ML
+# 🧠 Patient Recovery Prediction - ML
 
 Predicting patient recovery outcomes using machine learning.
 
-## Project overview
+## 📘 Project Overview
 
-This repository contains a reproducible machine-learning pipeline to predict patient recovery outcomes from clinical and demographic data. The codebase includes data ingestion, exploratory data analysis (EDA), preprocessing, model training, evaluation, and scripts to save and load trained models for inference.
+This project develops and evaluates machine learning models to estimate a patient’s recovery progress based on treatment and lifestyle factors.  
+It is a **supervised regression** problem where the target variable, **Recovery Index**, is a continuous score ranging from **10 to 100**, representing the patient’s overall recovery.
 
-Key objectives:
-- Analyze patient features and a recovery outcome target.
-- Perform EDA and visualizations to understand data patterns.
-- Preprocess and engineer features for machine learning.
-- Train and compare multiple supervised learning models.
-- Select the best model, evaluate it with appropriate metrics, and save the final artefact.
-- Provide reproducible code and documentation.
-
-## Repository structure
-
-```
-├── data/
-│   ├── raw/           # original dataset(s)
-│   └── processed/     # cleaned and engineered datasets
-├── src/               # scripts for EDA, preprocessing, modelling
-│   ├── 0_data_loading.py
-│   ├── 1_eda.py
-│   ├── 2_preprocessing.py
-│   ├── 3_model_training.py
-│   └── 4_model_evaluation.py
-├── models/            # saved/trained model artefacts (pickle / joblib)
-├── visualizations/    # plots and charts from EDA and results
-├── output/            # final reports, logs, metrics
-├── requirements.txt   # Python dependencies
-└── README.md           # project overview (this file)
-```
-
-## Dataset
-
-Describe the dataset used in the project. Replace the placeholders below with the actual dataset information.
-
-- Source: (e.g., hospital database, public dataset — add link or citation)
-- Features: e.g., age, sex, diagnosis, treatment type, comorbidities, lab results
-- Target: recovery outcome (binary: Recovered / Not Recovered, or multiclass)
-- Size: number of rows and columns
-- Known issues: class imbalance, missing data patterns, outliers, or data leakage risks
-
-Tip: If you want, I can help fill these fields using your dataset or a project report.
-
-## Exploratory data analysis (EDA) & preprocessing
-
-Typical EDA steps:
-- Summaries (counts, means, medians), distributions and missing-value analysis
-- Visualizations: histograms, boxplots, correlation heatmaps, class-balance plots
-- Check for class imbalance and possible confounders
-
-Typical preprocessing steps:
-- Missing-value handling (imputation strategies or removal)
-- Encoding categorical variables (one-hot / ordinal / target encoding as appropriate)
-- Feature scaling (StandardScaler / MinMaxScaler) where required
-- Feature engineering (interactions, aggregations, derived features)
-- Train/test split and cross-validation strategy (e.g., stratified k-fold)
-
-Ensure the same preprocessing pipeline is applied at training and inference time (use sklearn Pipelines or custom transformers + joblib/pickle).
-
-## Model development
-
-Recommended workflow:
-- Candidate algorithms: Logistic Regression, Random Forest, XGBoost/LightGBM, SVM, etc.
-- Hyperparameter tuning: GridSearchCV, RandomizedSearchCV, or Optuna for more advanced searches
-- Evaluation metrics: accuracy, precision, recall, F1-score, ROC-AUC, confusion matrix, and class-specific metrics (particularly for imbalanced problems)
-- Model selection: choose a model balancing performance and clinical interpretability
-
-Save the final model together with the fitted preprocessing pipeline (e.g., a single joblib file containing a Pipeline).
-
-## Example usage
-
-1. Clone the repository:
-   git clone https://github.com/ayhm23/Patient_Recovery_Prediction-ML.git
-   cd Patient_Recovery_Prediction-ML
-
-2. Install dependencies:
-   pip install -r requirements.txt
-
-3. Prepare data:
-   - Place raw data into data/raw/
-   - Run data-loading and preprocessing scripts:
-     python src/0_data_loading.py
-     python src/1_eda.py
-     python src/2_preprocessing.py
-
-4. Train models:
-   python src/3_model_training.py
-
-5. Evaluate models:
-   python src/4_model_evaluation.py
-
-6. The trained model artifact will be saved in models/, and visualizations / reports will be in visualizations/ and output/.
-
-7. For inference: load the saved pipeline and call predict / predict_proba on new, preprocessed samples.
-
-## Reproducibility & environment
-
-- Python version: 3.8+ recommended (specify exact version used)
-- Key libraries: pandas, numpy, scikit-learn, matplotlib/seaborn, xgboost/lightgbm (if used), joblib or pickle
-- For reproducible results: set random seeds (e.g., numpy and model random_state)
-- Consider using venv / conda or Docker to capture the exact environment
-
-## Results & interpretation
-
-When documenting final results:
-- Report chosen model and key metrics (e.g., "Random Forest — ROC-AUC: 0.87, recall (Recovered): 0.82")
-- Present a confusion matrix and class-specific metrics
-- Provide feature importance or SHAP explanations for model interpretability
-- Summarize clinical implications and limitations (sample size, bias, generalizability)
-- Suggest next steps and future work
-
-## Contributing
-
-Contributions are welcome. Suggested workflow:
-- Open an issue to discuss major changes
-- Create feature branches from main
-- Add tests and update documentation for new code
-- Open a pull request describing the change
-
-## License & acknowledgements
-
-- License: add your chosen license (e.g., MIT)
-- Acknowledgements: credit dataset sources, collaborators, frameworks, or advisors
+### Key Objectives
+- Perform Exploratory Data Analysis (EDA) and preprocessing.
+- Engineer features to capture non-linear interactions and relationships.
+- Train and compare multiple regression models.
+- Optimize the final model using **10-fold cross-validation**.
+- Generate predictions suitable for Kaggle submission.
+- Ensure full reproducibility using Scikit-learn Pipelines.
 
 ---
 
-Last updated: 2025-10-26
+## 🧾 Dataset Description
 
-If you’d like, I can:
-- Fill in dataset-specific details and actual model results,
-- Convert this into a release-ready README with badges and sample outputs,
-- Or update the README directly in your repository (I can create a PR if you want).
+**Dataset size:**  
+- 10,000 patient records  
+  - 8,000 for training  
+  - 2,000 for testing
+
+**Features:**
+| Feature | Description |
+|----------|-------------|
+| Therapy Hours | Total number of hours spent in therapy sessions |
+| Initial Health Score | Health assessment score recorded at first check-up |
+| Lifestyle Activities | Whether patient engaged in healthy lifestyle activities (Yes/No) |
+| Average Sleep Hours | Average hours of sleep per day |
+| Follow-Up Sessions | Number of follow-up sessions attended |
+
+**Target Variable:**  
+- **Recovery Index (10–100)** — Continuous measure of overall recovery progress.  
+
+---
+
+## 🧹 EDA and Preprocessing
+
+### Data Cleaning
+- No missing or duplicate values found.
+- `Lifestyle Activities` converted from categorical (Yes/No) to numeric (OneHotEncoder).
+- `Id` column removed as it had no predictive value.
+
+### Feature Scaling
+- Applied `StandardScaler` to numerical features.
+- Used `ColumnTransformer` inside `Pipeline` to prevent data leakage.
+
+### Feature Engineering
+Two phases of engineered features:
+
+1. **Initial (11 features total):**
+   - Interaction & summation terms like  
+     `Therapy_x_Health`, `Therapy_plus_Health`, `Sleep_x_Health`, `Sleep_plus_Health`, etc.
+
+2. **Advanced (15 features total):**
+   - Added ratio & log features:  
+     `Therapy_Health_ratio`, `Sleep_Health_ratio`, `log_Therapy`, `log_Health`.
+
+These captured proportional and non-linear effects between health and therapy metrics.
+
+---
+
+## 🤖 Models Used
+
+### Stage 1: Initial Model Comparison (11 features)
+Models tested:
+- **Linear models:** Linear Regression, Ridge, Lasso, ElasticNet, Bayesian Ridge  
+- **Tree ensembles:** Random Forest, Decision Tree  
+- **Boosting methods:** XGBoost, Gradient Boosting, AdaBoost, LightGBM  
+- **Others:** SVR (RBF & Linear), KNN
+
+**Best model:**  
+- **Ridge Regression (α≈22.5)**  
+- **Cross-val RMSE ≈ 2.0435, Kaggle Score = 2.066**
+
+### Stage 2: Refined Model Selection (15 features)
+Focused on:
+- **Ridge Regression (α=1.0)**
+- **ElasticNetCV (α≈0.0028, l1_ratio=0.9)**  
+  Used automatic 10-fold cross-validation.
+
+---
+
+## 🔧 Hyperparameter Tuning
+
+- **Ridge / Lasso / ElasticNet:** GridSearchCV & ElasticNetCV  
+- **Random Forest:** Tuned `n_estimators`, `max_depth`, `min_samples_leaf`  
+- **Boosting Models:** Tuned `n_estimators`, `learning_rate`, `max_depth`
+
+**Scoring Metric:** Negative Root Mean Squared Error (`neg_root_mean_squared_error`)
+
+---
+
+## 📊 Results and Performance
+
+| Stage | Model | CV / OOF RMSE | Kaggle Score |
+|--------|--------|---------------|---------------|
+| Initial (11 features) | Ridge | ~2.044 | 2.066 |
+| Refined (15 features) | Ridge | ~2.0444 | 1.982 |
+| Final (15 features) | ElasticNet | ~2.0449 (OOF) | **1.980** |
+
+**Final Model:** ElasticNet (α=0.00276, l1_ratio=0.9)  
+- Trained on full 15-feature dataset  
+- Predictions clipped to [10, 100]  
+- Saved as `.joblib` for deployment
+
+---
+
+## 🔍 Feature Importance
+
+| Feature | Coefficient |
+|----------|-------------|
+| Therapy_plus_Health | 7.1272 |
+| Initial Health Score | 5.2301 |
+| Therapy Hours | 4.1095 |
+| Sleep_plus_Health | 3.5845 |
+| log_Health | 1.6685 |
+| Therapy_x_Health | 1.2643 |
+| Therapy_Health_ratio | 1.1996 |
+| Follow-Up Sessions | 0.5463 |
+| Lifestyle Activities_Yes | 0.2991 |
+| Lifestyle Activities_No | -0.2991 |
+
+*(Several less-informative features like `Average Sleep Hours`, `FollowUp_x_Health`, `log_Therapy` were automatically zeroed out by ElasticNet.)*
+
+---
+
+## 💻 Usage Instructions
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ayhm23/Patient_Recovery_Prediction-ML.git
+   cd Patient_Recovery_Prediction-ML
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+Run the pipeline
+
+bash
+Copy code
+python src/0_data_loading.py
+python src/1_eda.py
+python src/2_preprocessing.py
+python src/3_model_training.py
+python src/4_model_evaluation.py
+Saved outputs
+
+Trained models → /models
+
+Visualizations → /visualizations
+
+Reports → /output
+
+🧩 Reproducibility
+Random seed: random_state=42
+
+Cross-validation: StratifiedKFold (10 splits, binned on y)
+
+Libraries:
+pandas, numpy, scikit-learn, matplotlib, xgboost, joblib
+
+All preprocessing handled in Scikit-learn Pipeline to avoid data leakage.
+
+📈 Key Takeaways
+Linear models outperformed complex ensembles for this dataset.
+
+Feature engineering (ratios, logs) significantly boosted performance.
+
+ElasticNet provided the optimal mix of interpretability, stability, and regularization.
+
+Final Kaggle score 1.980, RMSE ≈ 2.04 (OOF).
+
+🧑‍💻 Contributors
+Archit Jaju (IMT2023128)
+
+Sanyam Verma (IMT2023040)
+
+📜 License & AcknowledgementsAC
+License: Add license (e.g., MIT)
+
+Acknowledgements: Dataset providers, Kaggle platform, Scikit-learn, XGBoost
